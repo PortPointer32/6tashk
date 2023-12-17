@@ -20,3 +20,6 @@ class StatesMal(Helper):
     mode = HelperMode.snake_case
 
     STAT_0 = ListItem()
+    STAT_1 = ListItem()
+    STAT_2 = ListItem()
+    STAT_3 = ListItem()

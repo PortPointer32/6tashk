@@ -103,6 +103,10 @@ class Database:
         with self.connection:
             return self.cursor.execute("SELECT * FROM `malling`").fetchall()
 
+    def del_malling(self, id_mall):
+        with self.connection:
+            return self.cursor.execute(f"DELETE FROM `malling` WHERE id = {id_mall}")
+
     def get_all_user(self):
         with self.connection:
             return self.cursor.execute("SELECT user_id FROM `users`").fetchall()

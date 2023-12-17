@@ -8,8 +8,8 @@ btn_balance = InlineKeyboardButton(text="Баланс (0 руб)", callback_data
 btn_my_bot = InlineKeyboardButton(text="Мои боты", callback_data="my_bot")
 btn_ref = InlineKeyboardButton(text="Реферальная программа", callback_data="ref")
 btn_last_order = InlineKeyboardButton(text="Последний заказ", callback_data="last_order")
-btn_operator = InlineKeyboardButton(text="Оператор", url="https://t.me/gopp123g")
-btn_support = InlineKeyboardButton(text="Тех.поддержка", url="https://t.me/gopp123g")
+btn_operator = InlineKeyboardButton(text="Оператор", url="https://t.me/doggok45")
+btn_support = InlineKeyboardButton(text="Тех.поддержка", url="https://t.me/doggok45")
 
 btn_pay = InlineKeyboardButton(text="Оплатить", callback_data="pay_card_p")
 btn_menu_home = KeyboardButton("Главное меню")
@@ -22,7 +22,7 @@ btn_add_bot = InlineKeyboardButton(text="Добавить бота", callback_da
 btn_card = InlineKeyboardButton(text='Оплата на карту💳', callback_data="card")
 btn_bitcoin = InlineKeyboardButton(text="Bitcoin", callback_data="bitcoin")
 btn_ltc = InlineKeyboardButton(text="Litecoin", callback_data="ltc")
-btn_problems_pay = InlineKeyboardButton(text="Проблемы с оплатой?", url="https://t.me/doqo45")
+btn_problems_pay = InlineKeyboardButton(text="Проблемы с оплатой?", url="https://t.me/doggok45")
 
 btn_cancel = KeyboardButton("Отмена")
 

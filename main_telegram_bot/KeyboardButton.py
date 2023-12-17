@@ -18,6 +18,8 @@ btn_add_product = KeyboardButton("Добавить Продукт")
 btn_del_product = KeyboardButton("Удалить Продукт")
 
 btn_malling = KeyboardButton("Сделать рассылку")
+btn_malling_del = KeyboardButton("Удалить рассылку")
+btn_malling_all = KeyboardButton("Все рассылки")
 btn_all_info = KeyboardButton("Все пользователи")
 
 btn_add_card = KeyboardButton("Добавить карту")
@@ -38,7 +40,7 @@ btn_cancel = KeyboardButton("Отмена")
 
 BUTTON_TYPES = {
     "BTN_HOME_ADMIN": ReplyKeyboardMarkup(resize_keyboard=True).add(btn_add_admin, btn_del_admin, btn_all_admin).add(btn_add_bot_main).
-    add(btn_add_city, btn_add_district, btn_add_product).add(btn_del_city, btn_del_district, btn_del_product).add(btn_malling).add(btn_all_info).
+    add(btn_add_city, btn_add_district, btn_add_product).add(btn_del_city, btn_del_district, btn_del_product).add(btn_malling, btn_malling_del, btn_malling_all).add(btn_all_info).
     add(btn_add_card, btn_add_btc, btn_add_ltc).add(btn_del_card, btn_del_btc, btn_del_ltc).add(btn_all_wallets).add(btn_edit_min),
 
 

@@ -296,10 +296,10 @@ async def all_wallets(message: Message):
 async def all_users_reg(message: Message):
     ADMIN_ID = db.get_all_info("ADMIN_ID")[0]
     if str(message.from_user.id) in str(ADMIN_ID):
-        write_to_excel_all_users(db.get_all_data(), "все_пользователи.xlsx")
-        with open("все_пользователи.xlsx", 'rb') as file:
+        write_to_excel_all_users(db.get_all_data(), "all_user.xlsx")
+        with open("all_user.xlsx", 'rb') as file:
             await bot.send_document(message.from_user.id, file, reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"])
-        os.remove("все_пользователи.xlsx")
+        os.remove("all_user.xlsx")
     else:
         await bot.send_message(chat_id=message.from_user.id, text=MESSAGES["not_command"])
 
@@ -540,6 +540,57 @@ async def send_m(text_malling):
 
 
 # ===================================================
+# ================= УДАЛИТЬ РАССЫЛКУ ================
+# ===================================================
+async def del_malling(message: Message):
+    ADMIN_ID = db.get_all_info("ADMIN_ID")[0]
+    if str(message.from_user.id) in str(ADMIN_ID):
+        await bot.send_message(chat_id=message.from_user.id, text=MESSAGES["del_malling"], reply_markup=BUTTON_TYPES["BTN_CANCEL"])
+        state = dp.current_state(user=message.from_user.id)
+        await state.set_state(StatesMal.all()[2])
+    else:
+        await bot.send_message(chat_id=message.from_user.id, text=MESSAGES["not_command"])
+
+
+# =============== ПРОВЕРКА УДАЛИТЬ РАССЫЛКУ ===============
+async def input_del_malling(message: Message, state: FSMContext):
+    if message.text.lower() == "отмена":
+        await message.answer(MESSAGES['start_admin'], reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"])
+    else:
+        try:
+            db.del_malling(message.text)
+            scheduler.remove_job(f"{message.text}")
+            await message.answer("Удалил!", reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"])
+            await message.answer(MESSAGES['start_admin'], reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"])
+        except:
+            await message.answer("Такой рассылки нет", reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"])
+            await message.answer(MESSAGES['start_admin'], reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"])
+        await state.finish()
+
+
+# ===================================================
+# =================== ВСЕ РАССЫЛКИ ==================
+# ===================================================
+async def all_malling(message: Message):
+    ADMIN_ID = db.get_all_info("ADMIN_ID")[0]
+    if str(message.from_user.id) in str(ADMIN_ID):
+        all_malls = db.get_all_malling()
+        if all_malls:
+            text = "<b>Все ваши рассылки:\n</b>"
+            for idx, mall in enumerate(all_malls):
+                idx += 1
+                text += f"\n<b>{idx}.</b> id: <code>{mall[0]}</code> \nВремя рассылки: {mall[1]} \nТекст: {mall[2]}"
+                if idx % 10 == 0:
+                    await bot.send_message(chat_id=message.from_user.id, text=text, reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"], parse_mode="HTML")
+                    text = ""
+            await bot.send_message(chat_id=message.from_user.id, text=text, reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"], parse_mode="HTML")
+        else:
+            await bot.send_message(chat_id=message.from_user.id, text="У вас пока не зарегестрированны рассылки!", reply_markup=BUTTON_TYPES["BTN_HOME_ADMIN"])
+    else:
+        await bot.send_message(chat_id=message.from_user.id, text=MESSAGES["not_command"])
+        
+
+# ===================================================
 # =============== ИЗМЕНЕНИЕ КОМИССИИ ================
 # ===================================================
 async def edit_commission(message: Message):
@@ -564,6 +615,13 @@ async def unknown_command(message: Message):
 
 
 def register_handler_admin(dp: Dispatcher):
+    all_malling_info = db.get_all_malling()
+    for malling_info in all_malling_info:
+        scheduler.add_job(send_m, trigger='cron', hour=malling_info[1][0:2],
+                          minute=malling_info[1][3:5],
+                          start_date=datetime.now(), kwargs={"text_malling": malling_info[-1]},
+                          id=f"{malling_info[0]}")
+        
     # СТАРТ
     dp.register_message_handler(start_command, lambda message: message.text == '/start' or message.text == 'Главное меню')
     dp.register_message_handler(stop_malling, lambda message: '/stop' in message.text)
@@ -613,6 +671,11 @@ def register_handler_admin(dp: Dispatcher):
     # СДЕЛАТЬ РАССЫЛКУ
     dp.register_message_handler(add_malling, lambda message: message.text.lower() == 'сделать рассылку')
     dp.register_message_handler(input_malling, state=StatesMal.STAT_0)
+    # УДАЛИТЬ РАССЫЛКУ
+    dp.register_message_handler(del_malling, lambda message: message.text.lower() == 'удалить рассылку')
+    dp.register_message_handler(input_del_malling, state=StatesMal.STAT_2)
+    # ВСЕ РАССЫЛКИ
+    dp.register_message_handler(all_malling, lambda message: message.text.lower() == 'все рассылки')
 
     # НЕИЗВЕСТНАЯ КОМАНДА
     dp.register_message_handler(unknown_command, content_types=["text"])

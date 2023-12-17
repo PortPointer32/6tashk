@@ -44,6 +44,7 @@ add_malling_message = "<b>Введи текст как в примере:</b>\n\
 
 accept_malling_message = "Рассылка добавлена\nЧто бы её запустить, зайдите в нужный магазин и пропишите /start_m"
 no_malling_message = "Не правильный формат!"
+del_malling_message = "Введи id рассылки для удаления:"
 
 MESSAGES = {
     "start_user": start_message,
@@ -74,4 +75,5 @@ MESSAGES = {
     "add_malling": add_malling_message,
     "accept_malling": accept_malling_message,
     "no_malling": no_malling_message,
+    "del_malling": del_malling_message,
 }
