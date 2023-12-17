@@ -1,0 +1,14 @@
+[Unit]
+Description=6tashk
+After=network.target
+
+[Service]
+User=str
+Group=str
+
+WorkingDirectory=/home/str/6tashk/
+Environment="PYTHONPATH=/home/str/6tashk/"
+ExecStart=/home/str/6tashk/.venv/bin/python /home/str/6tashk/bot_main.py
+
+[Install]
+WantedBy=multi-user.target
